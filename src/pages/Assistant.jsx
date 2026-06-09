@@ -11,9 +11,9 @@ import ReactMarkdown from 'react-markdown';
  * 
  * @component
  */
-export default function Assistant() {
+export default function Assistant({ username }) {
   const [messages, setMessages] = useState([
-    { role: 'model', content: "Hello! I'm your EcoTrack AI Assistant. Calculate your carbon footprint on the Dashboard, and I can give you personalized tips to reduce it. How can I help you today?" }
+    { role: 'model', content: `Hello ${username || ''}! I'm your EcoTrack AI Assistant. Calculate your carbon footprint on the Dashboard, and I can give you personalized tips to reduce it. How can I help you today?` }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -33,7 +33,7 @@ export default function Assistant() {
     setIsLoading(true);
 
     try {
-      const footprintStr = localStorage.getItem('carbonFootprint');
+      const footprintStr = localStorage.getItem(`carbonFootprint_${username}`);
       const context = footprintStr ? JSON.parse(footprintStr) : null;
 
       const res = await fetch('/api/chat', {

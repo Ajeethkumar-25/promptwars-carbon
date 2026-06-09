@@ -1,4 +1,6 @@
+# pyrefly: ignore [missing-import]
 import pytest
+# pyrefly: ignore [missing-import]
 from httpx import AsyncClient, ASGITransport
 from app.main import app
 from app.models.schemas import FootprintData
@@ -12,14 +14,14 @@ async def test_save_footprint():
             "energy": 3.0,
             "food": 2.5
         }
-        response = await ac.post("/api/footprint", json=data)
+        response = await ac.post("/api/footprint?user_id=test_user", json=data)
     assert response.status_code == 200
     assert response.json()["status"] == "success"
 
 @pytest.mark.asyncio
 async def test_get_footprint():
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
-        response = await ac.get("/api/footprint")
+        response = await ac.get("/api/footprint?user_id=test_user")
     assert response.status_code == 200
     assert "data" in response.json()
 

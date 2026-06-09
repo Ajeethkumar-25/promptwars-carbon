@@ -11,7 +11,7 @@ import { motion } from 'framer-motion';
  * 
  * @component
  */
-export default function FootprintCalculator() {
+export default function FootprintCalculator({ username }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     carMiles: 15,
@@ -48,10 +48,10 @@ export default function FootprintCalculator() {
       rawInputs: formData
     };
 
-    localStorage.setItem('carbonFootprint', JSON.stringify(result));
+    localStorage.setItem(`carbonFootprint_${username}`, JSON.stringify(result));
     
     try {
-      await fetch('/api/footprint', {
+      await fetch(`/api/footprint?user_id=${encodeURIComponent(username)}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

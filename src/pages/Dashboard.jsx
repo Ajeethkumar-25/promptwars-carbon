@@ -12,14 +12,14 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
  * 
  * @component
  */
-export default function Dashboard() {
+export default function Dashboard({ username }) {
   const [footprint, setFootprint] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchFootprint = async () => {
       try {
-        const res = await fetch('/api/footprint');
+        const res = await fetch(`/api/footprint?user_id=${encodeURIComponent(username)}`);
         if (res.ok) {
           const result = await res.json();
           setFootprint(result.data);
