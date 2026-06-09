@@ -51,7 +51,8 @@ export default function FootprintCalculator({ username }) {
     localStorage.setItem(`carbonFootprint_${username}`, JSON.stringify(result));
     
     try {
-      await fetch(`/api/footprint?user_id=${encodeURIComponent(username)}`, {
+      const apiUrl = import.meta.env.VITE_API_URL || '';
+      await fetch(`${apiUrl}/api/footprint?user_id=${encodeURIComponent(username)}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

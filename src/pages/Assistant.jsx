@@ -36,7 +36,8 @@ export default function Assistant({ username }) {
       const footprintStr = localStorage.getItem(`carbonFootprint_${username}`);
       const context = footprintStr ? JSON.parse(footprintStr) : null;
 
-      const res = await fetch('/api/chat', {
+      const apiUrl = import.meta.env.VITE_API_URL || '';
+      const res = await fetch(`${apiUrl}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userMsg, context })

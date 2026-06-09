@@ -19,7 +19,8 @@ export default function Dashboard({ username }) {
   useEffect(() => {
     const fetchFootprint = async () => {
       try {
-        const res = await fetch(`/api/footprint?user_id=${encodeURIComponent(username)}`);
+        const apiUrl = import.meta.env.VITE_API_URL || '';
+        const res = await fetch(`${apiUrl}/api/footprint?user_id=${encodeURIComponent(username)}`);
         if (res.ok) {
           const result = await res.json();
           setFootprint(result.data);
