@@ -6,11 +6,28 @@ export default function Dashboard() {
   const [footprint, setFootprint] = useState(null);
 
   useEffect(() => {
-    // Load from local storage
-    const stored = localStorage.getItem('carbonFootprint');
-    if (stored) {
-      setFootprint(JSON.parse(stored));
-    }
+    const fetchFootprint = async () => {
+      try {
+        const response = await fetch('/api/footprint');
+        if (response.ok) {
+          const result = await response.json();
+          if (result.data) {
+            setFootprint(result.data);
+            localStorage.setItem('carbonFootprint', JSON.stringify(result.data));
+            return;
+          }
+        }
+      } catch (e) {
+        console.error("Failed to fetch footprint from backend", e);
+      }
+      
+      const stored = localStorage.getItem('carbonFootprint');
+      if (stored) {
+        setFootprint(JSON.parse(stored));
+      }
+    };
+    
+    fetchFootprint();
   }, []);
 
   if (!footprint) {

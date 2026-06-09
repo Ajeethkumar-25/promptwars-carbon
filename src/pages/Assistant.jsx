@@ -1,10 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { Send, Bot, User } from 'lucide-react';
-
-// Use the provided API key (In a real app, this should be in an environment variable)
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-const genAI = new GoogleGenerativeAI(API_KEY);
 
 export default function Assistant() {
   const [messages, setMessages] = useState([
@@ -28,24 +23,26 @@ export default function Assistant() {
     setIsLoading(true);
 
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-      
-      // Get context from local storage if available
       const footprintStr = localStorage.getItem('carbonFootprint');
-      let contextMsg = "You are EcoTrack AI, a helpful, smart, and dynamic assistant focused on helping users understand and reduce their carbon footprint. Provide concise, logical, and actionable advice.";
-      
-      if (footprintStr) {
-        const footprint = JSON.parse(footprintStr);
-        contextMsg += ` The user has a daily carbon footprint of ${footprint.total.toFixed(1)} kg CO2e (Transport: ${footprint.transport.toFixed(1)}kg, Energy: ${footprint.energy.toFixed(1)}kg, Food: ${footprint.food.toFixed(1)}kg). Tailor your advice to this context.`;
+      const context = footprintStr ? JSON.parse(footprintStr) : null;
+
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: userMsg,
+          context: context
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch from backend');
       }
 
-      const prompt = `${contextMsg}\n\nUser: ${userMsg}`;
-      
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const text = response.text();
-
-      setMessages(prev => [...prev, { role: 'model', content: text }]);
+      const data = await response.json();
+      setMessages(prev => [...prev, { role: 'model', content: data.response }]);
     } catch (error) {
       console.error("Error generating AI response:", error);
       setMessages(prev => [...prev, { role: 'model', content: "Sorry, I'm having trouble connecting right now. Please try again later." }]);

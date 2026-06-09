@@ -19,7 +19,7 @@ export default function FootprintCalculator() {
     }));
   };
 
-  const calculateFootprint = (e) => {
+  const calculateFootprint = async (e) => {
     e.preventDefault();
     
     // Simple calculation metrics (roughly estimated for demonstration)
@@ -49,6 +49,22 @@ export default function FootprintCalculator() {
     };
 
     localStorage.setItem('carbonFootprint', JSON.stringify(result));
+    
+    try {
+      await fetch('/api/footprint', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          transport: transportCO2,
+          energy: energyCO2,
+          food: foodCO2,
+          total: transportCO2 + energyCO2 + foodCO2
+        })
+      });
+    } catch (e) {
+      console.error("Failed to save footprint to backend", e);
+    }
+
     navigate('/');
   };
 
