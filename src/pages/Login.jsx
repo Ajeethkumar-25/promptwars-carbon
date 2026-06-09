@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Leaf, ArrowRight } from 'lucide-react';
+import PropTypes from 'prop-types';
 
 export default function Login({ onLogin }) {
   const [name, setName] = useState('');
@@ -46,3 +47,7 @@ export default function Login({ onLogin }) {
     </div>
   );
 }
+
+Login.propTypes = {
+  onLogin: PropTypes.func.isRequired
+};

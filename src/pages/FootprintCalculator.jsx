@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calculator, Car, Plane, Zap, Utensils, Leaf, Beef } from 'lucide-react';
 import { motion } from 'framer-motion';
+import PropTypes from 'prop-types';
 
 /**
  * FootprintCalculator Component
@@ -11,7 +12,7 @@ import { motion } from 'framer-motion';
  * 
  * @component
  */
-export default function FootprintCalculator({ username }) {
+const FootprintCalculator = React.memo(function FootprintCalculator({ username }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     carMiles: 15,
@@ -212,4 +213,10 @@ export default function FootprintCalculator({ username }) {
       </form>
     </motion.div>
   );
-}
+});
+
+FootprintCalculator.propTypes = {
+  username: PropTypes.string
+};
+
+export default FootprintCalculator;

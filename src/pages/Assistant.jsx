@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Send, Bot, User } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
+import DOMPurify from 'dompurify';
+import PropTypes from 'prop-types';
 
 /**
  * Assistant Component
@@ -11,7 +13,7 @@ import ReactMarkdown from 'react-markdown';
  * 
  * @component
  */
-export default function Assistant({ username }) {
+const Assistant = React.memo(function Assistant({ username }) {
   const [messages, setMessages] = useState([
     { role: 'model', content: `Hello ${username || ''}! I'm your EcoTrack AI Assistant. Calculate your carbon footprint on the Dashboard, and I can give you personalized tips to reduce it. How can I help you today?` }
   ]);
@@ -151,4 +153,10 @@ export default function Assistant({ username }) {
       </form>
     </motion.div>
   );
-}
+});
+
+Assistant.propTypes = {
+  username: PropTypes.string
+};
+
+export default Assistant;

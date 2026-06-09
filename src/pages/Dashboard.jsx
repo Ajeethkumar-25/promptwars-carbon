@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Leaf, Car, Zap, Utensils, ArrowRight, Award } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
+import PropTypes from 'prop-types';
 
 /**
  * Dashboard Component
@@ -12,7 +13,7 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
  * 
  * @component
  */
-export default function Dashboard({ username }) {
+const Dashboard = React.memo(function Dashboard({ username }) {
   const [footprint, setFootprint] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -183,7 +184,12 @@ export default function Dashboard({ username }) {
           <Leaf size={20} /> Get Personalized Tips from AI
         </Link>
       </motion.div>
-
     </motion.div>
   );
-}
+});
+
+Dashboard.propTypes = {
+  username: PropTypes.string
+};
+
+export default Dashboard;

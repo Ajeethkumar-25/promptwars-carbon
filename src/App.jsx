@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { Leaf, LayoutDashboard, Calculator, MessageSquare, LogOut } from 'lucide-react';
 import './App.css';
 
-import Dashboard from './pages/Dashboard';
-import FootprintCalculator from './pages/FootprintCalculator';
-import Assistant from './pages/Assistant';
 import Login from './pages/Login';
 import Breadcrumbs from './components/Breadcrumbs';
+
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const FootprintCalculator = lazy(() => import('./pages/FootprintCalculator'));
+const Assistant = lazy(() => import('./pages/Assistant'));
 
 function App() {
   const [username, setUsername] = useState(null);
@@ -68,11 +69,13 @@ function App() {
 
         <main className="main-content">
           <Breadcrumbs />
-          <Routes>
-            <Route path="/" element={<Dashboard username={username} />} />
-            <Route path="/calculate" element={<FootprintCalculator username={username} />} />
-            <Route path="/assistant" element={<Assistant username={username} />} />
-          </Routes>
+          <Suspense fallback={<div className="loading-dots"><span>.</span><span>.</span><span>.</span></div>}>
+            <Routes>
+              <Route path="/" element={<Dashboard username={username} />} />
+              <Route path="/calculate" element={<FootprintCalculator username={username} />} />
+              <Route path="/assistant" element={<Assistant username={username} />} />
+            </Routes>
+          </Suspense>
         </main>
 
         <footer className="footer">
