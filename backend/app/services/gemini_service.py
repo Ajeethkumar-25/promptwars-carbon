@@ -1,10 +1,11 @@
+from typing import Optional, Dict, Any
 import google.generativeai as genai
 from app.core.config import settings
 
 if settings.GEMINI_API_KEY:
     genai.configure(api_key=settings.GEMINI_API_KEY)
 
-async def generate_chat_response(message: str, context: dict = None) -> str:
+async def generate_chat_response(message: str, context: Optional[Dict[str, Any]] = None) -> str:
     if not settings.GEMINI_API_KEY:
         raise ValueError("Gemini API Key not configured")
 

@@ -1,6 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Send, Bot, User } from 'lucide-react';
 
+/**
+ * Assistant Component
+ * 
+ * Provides an interactive AI chat interface for users to receive personalized 
+ * carbon footprint reduction advice.
+ * 
+ * @component
+ */
 export default function Assistant() {
   const [messages, setMessages] = useState([
     { role: 'model', content: "Hello! I'm your EcoTrack AI Assistant. Calculate your carbon footprint on the Dashboard, and I can give you personalized tips to reduce it. How can I help you today?" }
@@ -13,7 +21,7 @@ export default function Assistant() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSend = async (e) => {
+  const handleSend = useCallback(async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
 
@@ -49,7 +57,7 @@ export default function Assistant() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [input]);
 
   return (
     <div className="glass-panel animate-fade-in" style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 250px)', minHeight: '400px' }}>
@@ -112,8 +120,16 @@ export default function Assistant() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           disabled={isLoading}
+          maxLength={1000}
+          aria-label="Message input"
         />
-        <button type="submit" className="btn-primary" disabled={isLoading} style={{ padding: '0.75rem' }}>
+        <button 
+          type="submit" 
+          className="btn-primary" 
+          disabled={isLoading || !input.trim()} 
+          style={{ padding: '0.75rem' }}
+          aria-label="Send message"
+        >
           <Send size={20} />
         </button>
       </form>

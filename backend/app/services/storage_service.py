@@ -1,7 +1,8 @@
+from typing import Dict, Any
 from app.models.schemas import FootprintData
 
 # Simple in-memory storage for footprints
-footprint_db = {}
+footprint_db: Dict[str, Any] = {}
 
 def save_footprint_data(user_id: str, data: FootprintData):
     footprint_db[user_id] = data.model_dump() if hasattr(data, 'model_dump') else data.dict()

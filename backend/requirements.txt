@@ -3,3 +3,9 @@ uvicorn
 python-dotenv
 google-generativeai
 pydantic
+
+pytest
+httpx
+ruff
+mypy
+pytest-asyncio

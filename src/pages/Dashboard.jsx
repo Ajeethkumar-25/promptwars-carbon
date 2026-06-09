@@ -2,6 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Leaf, Car, Zap, Utensils, ArrowRight } from 'lucide-react';
 
+/**
+ * Dashboard Component
+ * 
+ * Displays the user's current carbon footprint breakdown and provides
+ * navigation to the calculator and AI assistant.
+ * 
+ * @component
+ */
 export default function Dashboard() {
   const [footprint, setFootprint] = useState(null);
 

@@ -2,6 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calculator } from 'lucide-react';
 
+/**
+ * FootprintCalculator Component
+ * 
+ * Collects user habits and calculates their estimated daily carbon footprint.
+ * Posts the result to the backend API.
+ * 
+ * @component
+ */
 export default function FootprintCalculator() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -77,12 +85,14 @@ export default function FootprintCalculator() {
 
       <form onSubmit={calculateFootprint}>
         <div className="input-group">
-          <label className="input-label">Daily car travel (miles)</label>
+          <label htmlFor="carMiles" className="input-label">Daily car travel (miles)</label>
           <input 
+            id="carMiles"
             type="number" 
             name="carMiles" 
             className="input-field" 
             min="0" 
+            max="1000"
             value={formData.carMiles} 
             onChange={handleChange} 
             required 
@@ -90,12 +100,14 @@ export default function FootprintCalculator() {
         </div>
 
         <div className="input-group">
-          <label className="input-label">Yearly flight travel (hours)</label>
+          <label htmlFor="flightHours" className="input-label">Yearly flight travel (hours)</label>
           <input 
+            id="flightHours"
             type="number" 
             name="flightHours" 
             className="input-field" 
             min="0" 
+            max="1000"
             value={formData.flightHours} 
             onChange={handleChange} 
             required 
@@ -103,12 +115,14 @@ export default function FootprintCalculator() {
         </div>
 
         <div className="input-group">
-          <label className="input-label">Daily home electricity usage (kWh)</label>
+          <label htmlFor="electricityKwh" className="input-label">Daily home electricity usage (kWh)</label>
           <input 
+            id="electricityKwh"
             type="number" 
             name="electricityKwh" 
             className="input-field" 
             min="0" 
+            max="1000"
             value={formData.electricityKwh} 
             onChange={handleChange} 
             required 
@@ -116,8 +130,9 @@ export default function FootprintCalculator() {
         </div>
 
         <div className="input-group">
-          <label className="input-label">Diet Type</label>
+          <label htmlFor="dietType" className="input-label">Diet Type</label>
           <select 
+            id="dietType"
             name="dietType" 
             className="input-field" 
             value={formData.dietType} 
