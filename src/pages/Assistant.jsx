@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Send, Bot, User } from 'lucide-react';
+import { motion } from 'framer-motion';
+import ReactMarkdown from 'react-markdown';
 
 /**
  * Assistant Component
@@ -34,22 +36,15 @@ export default function Assistant() {
       const footprintStr = localStorage.getItem('carbonFootprint');
       const context = footprintStr ? JSON.parse(footprintStr) : null;
 
-      const response = await fetch('/api/chat', {
+      const res = await fetch('/api/chat', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          message: userMsg,
-          context: context
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMsg, context })
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch from backend');
-      }
-
-      const data = await response.json();
+      if (!res.ok) throw new Error("Failed to fetch from backend");
+      const data = await res.json();
+      
       setMessages(prev => [...prev, { role: 'model', content: data.response }]);
     } catch (error) {
       console.error("Error generating AI response:", error);
@@ -60,60 +55,80 @@ export default function Assistant() {
   }, [input]);
 
   return (
-    <div className="glass-panel animate-fade-in" style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 250px)', minHeight: '400px' }}>
-      <div style={{ borderBottom: '1px solid var(--card-border)', paddingBottom: '1rem', marginBottom: '1rem' }}>
-        <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0 }}>
-          <Bot size={28} color="var(--accent-primary)" />
-          EcoTrack Assistant
-        </h2>
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="glass-panel" 
+      style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 250px)', minHeight: '400px' }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid var(--card-border)' }}>
+        <Bot size={32} color="var(--accent-primary)" />
+        <h2>EcoTrack AI</h2>
       </div>
 
-      <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '1rem', paddingRight: '0.5rem' }}>
+      <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '1.5rem', marginBottom: '1.5rem', paddingRight: '1rem' }}>
         {messages.map((msg, idx) => (
-          <div key={idx} style={{
-            display: 'flex',
-            gap: '1rem',
-            alignItems: 'flex-start',
-            flexDirection: msg.role === 'user' ? 'row-reverse' : 'row'
-          }}>
+          <motion.div 
+            initial={{ opacity: 0, x: msg.role === 'user' ? 20 : -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            key={idx} 
+            style={{ 
+              display: 'flex', 
+              gap: '1rem', 
+              alignItems: 'flex-start',
+              flexDirection: msg.role === 'user' ? 'row-reverse' : 'row'
+            }}
+          >
             <div style={{ 
-              background: msg.role === 'user' ? 'var(--accent-primary)' : 'rgba(15, 23, 42, 0.8)',
-              padding: '0.75rem', 
-              borderRadius: '50%',
+              padding: '0.5rem', 
+              borderRadius: '50%', 
+              background: msg.role === 'user' ? 'var(--accent-primary)' : 'rgba(255,255,255,0.1)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center'
             }}>
-              {msg.role === 'user' ? <User size={20} /> : <Bot size={20} color="var(--accent-primary)" />}
+              {msg.role === 'user' ? <User size={20} color="white" /> : <Bot size={20} color="var(--accent-primary)" />}
             </div>
-            <div style={{
-              background: msg.role === 'user' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(255, 255, 255, 0.05)',
-              padding: '1rem 1.5rem',
+            
+            <div style={{ 
+              background: msg.role === 'user' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(15, 23, 42, 0.6)',
+              padding: '1rem',
               borderRadius: '12px',
+              borderTopRightRadius: msg.role === 'user' ? '4px' : '12px',
+              borderTopLeftRadius: msg.role === 'model' ? '4px' : '12px',
+              border: '1px solid var(--card-border)',
               maxWidth: '80%',
-              border: msg.role === 'user' ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid var(--card-border)',
-              whiteSpace: 'pre-wrap'
+              lineHeight: '1.6'
             }}>
-              {msg.content}
+              {msg.role === 'model' ? (
+                <div className="markdown-body">
+                  <ReactMarkdown>{msg.content}</ReactMarkdown>
+                </div>
+              ) : (
+                msg.content
+              )}
             </div>
-          </div>
+          </motion.div>
         ))}
+        
         {isLoading && (
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-            <div style={{ background: 'rgba(15, 23, 42, 0.8)', padding: '0.75rem', borderRadius: '50%' }}>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+            <div style={{ padding: '0.5rem', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex' }}>
               <Bot size={20} color="var(--accent-primary)" />
             </div>
-            <div style={{ padding: '1rem', color: 'var(--text-secondary)' }}>
-              Thinking...
+            <div style={{ padding: '1rem', background: 'rgba(15, 23, 42, 0.6)', borderRadius: '12px', borderTopLeftRadius: '4px', display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
+              <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1.5 }}>●</motion.span>
+              <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0.2 }}>●</motion.span>
+              <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0.4 }}>●</motion.span>
             </div>
-          </div>
+          </motion.div>
         )}
         <div ref={messagesEndRef} />
       </div>
 
-      <form onSubmit={handleSend} style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
-        <input
-          type="text"
+      <form onSubmit={handleSend} style={{ display: 'flex', gap: '1rem', marginTop: 'auto' }}>
+        <input 
+          type="text" 
           className="input-field"
           style={{ marginBottom: 0 }}
           placeholder="Ask for advice on reducing your footprint..."
@@ -133,6 +148,6 @@ export default function Assistant() {
           <Send size={20} />
         </button>
       </form>
-    </div>
+    </motion.div>
   );
 }

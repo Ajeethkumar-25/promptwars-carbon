@@ -20,7 +20,7 @@ describe('FootprintCalculator', () => {
     expect(screen.getByLabelText(/Daily car travel/i)).toBeDefined();
     expect(screen.getByLabelText(/Yearly flight travel/i)).toBeDefined();
     expect(screen.getByLabelText(/Daily home electricity usage/i)).toBeDefined();
-    expect(screen.getByLabelText(/Diet Type/i)).toBeDefined();
+    expect(screen.getByLabelText(/Select Vegan diet/i)).toBeDefined();
   });
 
   it('calculates the footprint correctly on submit', () => {
@@ -37,6 +37,10 @@ describe('FootprintCalculator', () => {
     fireEvent.change(carInput, { target: { value: '10' } });
     fireEvent.change(flightInput, { target: { value: '2' } });
     fireEvent.change(electricityInput, { target: { value: '5' } });
+
+    // Click vegan diet
+    const veganButton = screen.getByLabelText(/Select Vegan diet/i);
+    fireEvent.click(veganButton);
 
     const button = screen.getByRole('button', { name: /Calculate My Impact/i });
     fireEvent.click(button);
