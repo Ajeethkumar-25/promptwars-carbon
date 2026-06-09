@@ -50,7 +50,7 @@ export default function Dashboard() {
         <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>
           It looks like you haven't calculated your footprint yet. Let's get started!
         </p>
-        <Link to="/calculator" className="btn-primary">
+        <Link to="/calculate" className="btn-primary">
           Calculate Footprint <ArrowRight size={16} />
         </Link>
       </motion.div>
@@ -92,7 +92,7 @@ export default function Dashboard() {
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
         <h2>Your Environmental Impact</h2>
-        <Link to="/calculator" className="btn-secondary" style={{ fontSize: '0.9rem', padding: '0.5rem 1rem' }}>
+        <Link to="/calculate" className="btn-secondary" style={{ fontSize: '0.9rem', padding: '0.5rem 1rem' }}>
           Recalculate
         </Link>
       </div>
